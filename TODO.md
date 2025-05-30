@@ -1,0 +1,1 @@
+- Remove postgres credentials from docker-compose.yml

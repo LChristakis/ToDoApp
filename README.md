@@ -1,2 +1,2 @@
-docker build -t flask ./flask
+cd flask && docker build -t flask .
 

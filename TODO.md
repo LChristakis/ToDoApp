@@ -1,1 +1,2 @@
 - Remove postgres credentials from docker-compose.yml
+- Switch from flask debug server to wsgi

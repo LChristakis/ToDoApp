@@ -1,4 +1,14 @@
 services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=flask
+    volumes:
+      - ./db/postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  redis:
+    image: redis
   flask:
     build: ./flask
     ports:
@@ -10,15 +20,5 @@ services:
       - DATABASE_URL=postgresql://postgres:password@db/flask
     volumes:
       - ./flask:/app
-  db:
-    image: postgres
-    environment:
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=flask
-    volumes:
-      - ./db/postgres_data:/var/lib/postgresql/data
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-  redis:
-    image: redis
 volumes:
   postgres_data:

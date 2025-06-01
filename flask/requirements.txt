@@ -1,4 +1,3 @@
 flask
 redis
-flask-SQLAlchemy
 psycopg2

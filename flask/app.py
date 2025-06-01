@@ -19,17 +19,26 @@ def dump_task_row(row):
         'status': row[3],
     }
 
+expiration_time = 300 # seconds
+
 @app.route('/api/tasks', methods=['GET', 'POST'])
 def tasks():
 
     if request.method == 'GET':
-        conn = fetch_db_conn()
-        with conn.cursor() as cur:
-            statement = 'SELECT id, title, description, status FROM tasks WHERE deleted = FALSE'
-            cur.execute(statement)
-            results = cur.fetchall()
-            conn.close()
-            return json.dumps([dump_task_row(r) for r in results])
+
+        all_tasks = redis.get('all_tasks')
+        if all_tasks is None:
+            conn = fetch_db_conn()
+            with conn.cursor() as cur:
+                statement = 'SELECT id, title, description, status FROM tasks WHERE deleted = FALSE'
+                cur.execute(statement)
+                all_tasks = cur.fetchall()
+                conn.close()
+
+            all_tasks = json.dumps({ 'tasks': [dump_task_row(r) for r in all_tasks]})
+            redis.set('all_tasks', all_tasks, ex=expiration_time)
+
+        return json.loads(all_tasks)
 
     if request.method == 'POST':
         task = request.get_json()
@@ -47,6 +56,7 @@ def tasks():
             cur.close()
             conn.commit()
         conn.close()
+        redis.delete('all_tasks')
         return dump_task_row(new_task)
     return { 'error': 'Invalid request' }
 
@@ -59,18 +69,24 @@ def task(id):
         return { 'error': 'invalid id' }
     task = None
     conn = fetch_db_conn()
-    with conn.cursor() as cur:
-        statement = 'SELECT id, title, description, status FROM tasks WHERE id = %s and deleted = FALSE'
-        cur.execute(statement, (id,))
-        task = cur.fetchone()
-        cur.close()
-    if task is None:
-        # TODO - throw 404
-        return { 'error': 'id not found' }
+    task = redis.get(id)
+    if task is not None:
+        task = json.loads(task)
+    else:
+        with conn.cursor() as cur:
+            statement = 'SELECT id, title, description, status FROM tasks WHERE id = %s and deleted = FALSE'
+            cur.execute(statement, (id,))
+            task = cur.fetchone()
+            cur.close()
+        if task is None:
+            # TODO - throw 404
+            return { 'error': 'id not found' }
+        task = dump_task_row(task)
+        redis.set(id, json.dumps(task), ex=expiration_time)
     
     if request.method == 'GET':
         conn.close()
-        return dump_task_row(task)
+        return (task)
 
     if request.method == 'DELETE':
         with conn.cursor() as cur:
@@ -79,6 +95,7 @@ def task(id):
             cur.close()
             conn.commit()
         conn.close()
+        redis.delete(id)
         # TODO - return 204
         return { 'success': 'task deleted' }
 
@@ -111,6 +128,7 @@ def task(id):
             cur.close()
             conn.commit()
         conn.close()
+        redis.delete(id)
         return dump_task_row(updated_task)
     
     return { 'error': 'Invalid request'}

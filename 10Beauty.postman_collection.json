@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "70afb989-8552-4720-a530-6ba9c1519049",
+		"name": "10Beauty",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43614347",
+		"_collection_link": "https://lukechristakis.postman.co/workspace/Luke-Christakis's-Workspace~a505ef4c-3ae2-4ac2-84f7-6fccb1dbbbf2/collection/43614347-70afb989-8552-4720-a530-6ba9c1519049?action=share&source=collection_link&creator=43614347"
+	},
+	"item": [
+		{
+			"name": "GET tasks",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5001/api/tasks",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"tasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET task",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5001/api/task/6",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"task",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE task",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:5001/api/task/5",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"task",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT task",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:5001/api/task/2?title=Another Title&description=A new description&status=1",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"task",
+						"2"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "Another Title"
+						},
+						{
+							"key": "description",
+							"value": "A new description"
+						},
+						{
+							"key": "status",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST task",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Test Task\",\n    \"description\": \"NEW Test task description\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5001/api/tasks",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"tasks"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

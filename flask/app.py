@@ -1,10 +1,12 @@
 import psycopg2
 import json
 from flask import Flask, request
+from flask_cors import CORS
 from redis import Redis
 from os import getenv
 
 app = Flask(__name__)
+CORS(app)
 redis = Redis(host='redis', port=6379)
 
 def fetch_db_conn():
@@ -96,6 +98,7 @@ def task(id):
             conn.commit()
         conn.close()
         redis.delete(id)
+        redis.delete('all_tasks')
         # TODO - return 204
         return { 'success': 'task deleted' }
 
@@ -129,6 +132,7 @@ def task(id):
             conn.commit()
         conn.close()
         redis.delete(id)
+        redis.delete('all_tasks')
         return dump_task_row(updated_task)
     
     return { 'error': 'Invalid request'}

@@ -14,7 +14,7 @@ export interface Task {
   error?: string;
 }
 export interface TasksSliceState {
-  tasks: Task[]; // TODO - use a dict instead of an array, or a set
+  tasks: Task[];
   status: "idle" | "loading" | "failed";
 }
 

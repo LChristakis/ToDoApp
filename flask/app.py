@@ -81,8 +81,7 @@ def task(id):
             task = cur.fetchone()
             cur.close()
         if task is None:
-            # TODO - throw 404
-            return { 'error': 'id not found' }
+            return { 'error': 'id not found' }, 404
         task = dump_task_row(task)
         redis.set(id, json.dumps(task), ex=expiration_time)
     
@@ -99,8 +98,7 @@ def task(id):
         conn.close()
         redis.delete(id)
         redis.delete('all_tasks')
-        # TODO - return 204
-        return { 'success': 'task deleted' }
+        return { 'success': 'task deleted' }, 204
 
     if request.method == 'PUT':
         parameters = []
